@@ -1,0 +1,40 @@
+inherit: 
+    - ../base.yaml
+
+model:
+    family: "gpt2-loop"
+    n_dims: 15 # By default, p = 1/3 * n_dims, q = 2/3 * n_dims
+    n_embd: 960 # D * n_head = n_embd
+    n_layer: 2
+    n_head: 12
+    n_positions: 51 # maximum number of tokens the model can handle
+
+training:
+    resume_id: Loop=10_N=51_d=15_nhead=12_D=80_L=2
+    data: iv
+    train_steps: 300001
+    save_every_steps: 100000
+    learning_rate: 0.0000001
+    batch_size: 64
+    tasks:
+        - name: iv_regression
+          kwargs: {normalize_w: True}
+    curriculum:
+        # train over a variaty of N
+        points:
+            start: 51
+            end: 51
+            inc: 5
+            interval: 10000
+        # train over a variaty of dimensions
+        dims:
+            start: 15
+            end: 15
+            inc: 1
+            interval: 10000
+
+
+out_dir: ../TrainedTF/iv_regression
+
+wandb:
+    name: "Loop=10_N=51_d=15_nhead=12_D=80_L=2"

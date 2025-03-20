@@ -1,0 +1,51 @@
+config: conf/gpt/iv_regression.yaml
+inherit:
+- ..\src\conf\base.yaml
+model:
+  encoder_activation: relu
+  family: gpt2-loop
+  n_dims: 15
+  n_embd: 960 # 80 * 12
+  n_head: 12
+  n_layer: 2
+  n_positions: 51
+  normalize_attn: true
+out_dir: ../TrainedTF/iv_regression\Loop=10_N=51_d=15_nhead=12_D=80_L=2
+test_run: false
+training:
+  batch_size: 64
+  curriculum:
+    dims:
+      end: 15
+      inc: 2
+      interval: 10000
+      start: 15
+    points:
+      end: 51
+      inc: 5
+      interval: 10000
+      start: 51
+  data: iv
+  keep_every_steps: 10000
+  lasso_guided_opt: false
+  lasso_guided_opt_lam: 1.0
+  lasso_guided_opt_layer: -2
+  lasso_guided_opt_token: -1
+  learning_rate: 1.0e-03
+  learning_rate_override: false
+  num_tasks: null
+  num_training_examples: null
+  optimizer_reset: false
+  resume_id: Loop=10_N=51_d=15_nhead=12_D=80_L=2
+  save_every_steps: 1000
+  tasks:
+  - kwargs:
+      normalize_w: true
+    name: iv_regression
+  train_steps: 300001
+wandb:
+  entity: usrname
+  log_every_steps: 100
+  name: Loop=10_N=51_d=15_nhead=12_D=80_L=2
+  notes: ''
+  project: in-context-training
